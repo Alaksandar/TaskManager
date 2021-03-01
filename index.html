@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="container">
+
+
+            <div class="container__form-container">
+                <button data-action="add">Создать задачу</button>
+                <form id="add-list" class="close" method="post" action="#">
+                    <input type="text" name="toList" placeholder="Добавить задачу" value="">
+                    <select class="select" name="select" size="3" multiple>
+
+                        <option class="option" value="not-imp">Несрочно</option>
+                        <option class="option" value="imp">Срочно</option>
+                        <option class="option" value="very-imp">Очень срочно</option>
+
+                    </select>
+                    <div class="form-buttons">
+                        <input type="submit" value="Добавить">
+                        <span class="close_form">x</span>
+                    </div>
+                </form>
+            </div>
+
+</body>
+
+</html>
