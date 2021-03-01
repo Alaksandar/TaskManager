@@ -1,4 +1,4 @@
-import { openForm, closeForm } from "./Actions.js";
+import { openForm, closeForm, submitTask } from "./Actions.js";
 
 import "./assets/styles/style.css";
 
@@ -19,5 +19,6 @@ addButton.addEventListener("click", e => openForm(e.target));
 close_form.addEventListener("click", e => closeForm(e.target));
 
 
-// e.preventDefault();
+// Создать задачу при клике на кнопку "Добавить":
+
 form.addEventListener("submit", e => submitTask(e));

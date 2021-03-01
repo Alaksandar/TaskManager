@@ -1,3 +1,5 @@
+import { ImportantTask } from "./ImportantTask.js";
+
 import "./assets/styles/style.css";
 
 
@@ -32,7 +34,30 @@ export function closeForm(close_form) {
 
 
 
+// Создать задачу при клике на кнопку "Добавить" на основе конструктора из "./Task.js", если:
+// 1) поле ввода не пустое,
+// 2) выбран уровень срочности.
+
 export function submitTask(e) {
 
     e.preventDefault();
+
+    const inputText = document.querySelector('input[type="text"]');
+    const options = document.querySelectorAll("option");
+
+    const li = document.createElement("li");
+
+    console.log(inputText.value)
+
+    for (let option of options) {
+
+        if (option.selected && (inputText.value != 0)) {
+
+            new ImportantTask(inputText.value).create(li);
+            inputText.value = "";
+            option.selected = false;
+            console.log(li);    
+        }
+    }
+    console.log("inputText.value", inputText.value);
 }
