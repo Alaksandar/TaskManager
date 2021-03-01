@@ -1,14 +1,14 @@
 import { Task } from "./Task.js";
 
-import { importantStore } from "./Store.js";
+import { veryImportantStore } from "./Store.js";
 
 
 
-// Создать срочную задачу,
+// Создать очень срочную задачу,
 // поместить задачу в соответствующую колонку,
 // сохранить данные задачи в массиве в "./Store.js"
 
-export class ImportantTask extends Task {
+export class VeryImportantTask extends Task {
 
     constructor(name, checked) {
         super(name, checked);
@@ -17,9 +17,9 @@ export class ImportantTask extends Task {
     create(li) {
         super.create(li);
 
-        li.setAttribute("data-important", importantStore.length);
+        li.setAttribute("data-very-important", veryImportantStore.length);
 
-        const ul = document.querySelector(".important-task-col ul");
+        const ul = document.querySelector(".very-important-task-col ul");
 
         if (Array.from(ul.children).length > 0 &&
             Array.from(ul.children).some(li => li.classList.contains("clean"))) {
@@ -29,10 +29,10 @@ export class ImportantTask extends Task {
 
         ul.append(li);
 
-        this.id = importantStore.length;
+        this.id = veryImportantStore.length;
 
-        importantStore.push(this);
+        veryImportantStore.push(this);
 
-        console.log("importantStore ", importantStore);
+        console.log("veryImportantStore ", veryImportantStore);
     }
 }

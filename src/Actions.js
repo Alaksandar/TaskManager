@@ -1,4 +1,8 @@
+import { NotImportantTask } from "./NotImportantTask.js";
 import { ImportantTask } from "./ImportantTask.js";
+import { VeryImportantTask } from "./VeryImportantTask.js";
+
+import { notImportantStore, importantStore, veryImportantStore } from "./Store.js";
 
 import "./assets/styles/style.css";
 
@@ -34,7 +38,8 @@ export function closeForm(close_form) {
 
 
 
-// Создать задачу при клике на кнопку "Добавить" на основе конструктора из "./Task.js", если:
+// Создать задачу при клике на кнопку "Добавить" на основе конструктора из "./Task.js",
+// поместить задачу в соответствующей колонке, если:
 // 1) поле ввода не пустое,
 // 2) выбран уровень срочности.
 
@@ -49,15 +54,28 @@ export function submitTask(e) {
 
     console.log(inputText.value)
 
-    for (let option of options) {
+    if (options[0].selected && (inputText.value != 0)) {
 
-        if (option.selected && (inputText.value != 0)) {
+        new NotImportantTask(inputText.value).create(li);
+        inputText.value = "";
+        options[0].selected = false;
 
-            new ImportantTask(inputText.value).create(li);
-            inputText.value = "";
-            option.selected = false;
-            console.log(li);    
-        }
+        console.log(li);
+
+    } else if (options[1].selected && (inputText.value != 0)) {
+
+        new ImportantTask(inputText.value).create(li);
+        inputText.value = "";
+        options[1].selected = false;
+
+        console.log(li);
+
+    } else if (options[2].selected && (inputText.value != 0)) {
+
+        new VeryImportantTask(inputText.value).create(li);
+        inputText.value = "";
+        options[2].selected = false;
+
+        console.log(li);
     }
-    console.log("inputText.value", inputText.value);
 }
