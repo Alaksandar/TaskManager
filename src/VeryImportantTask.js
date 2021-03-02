@@ -21,12 +21,6 @@ export class VeryImportantTask extends Task {
 
         const ul = document.querySelector(".very-important-task-col ul");
 
-        if (Array.from(ul.children).length > 0 &&
-            Array.from(ul.children).some(li => li.classList.contains("clean"))) {
-
-            li.classList.add("clean");
-        }
-
         ul.append(li);
 
         this.id = veryImportantStore.length;
