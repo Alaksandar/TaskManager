@@ -86,8 +86,11 @@ export function hideShowTasksColumn(e) {
     } else {
         for (let li of Array.from(e.target.nextElementSibling.children)) {
 
-            li.classList.toggle("clean");
-            e.target.classList.toggle("chosen");
+            if (!li.firstElementChild.checked) {
+
+                li.classList.toggle("clean");
+                e.target.classList.toggle("chosen");
+            }
         }
     }
 }
