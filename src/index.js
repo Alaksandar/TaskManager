@@ -28,3 +28,8 @@ form.addEventListener("submit", e => submitTask(e));
 // Скрыть / показать колонку с заданиями кликом на заголовок:
 
 container.addEventListener("click", hideShowTasksColumn);
+
+
+// Маркировка задач
+
+container.addEventListener("click", markTask);

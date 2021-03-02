@@ -94,3 +94,41 @@ export function hideShowTasksColumn(e) {
         }
     }
 }
+
+
+
+// Маркировка задач, сохранение статуса маркировки в "./Store.js"
+
+export function markTask(e) {
+
+    if (e.target.tagName !== "INPUT") {
+
+        return;
+
+    } else {
+
+        e.target.setAttribute("checked", e.target.checked);
+
+        let taskType = e.target.nextElementSibling.parentElement.dataset;
+        let taskTypeName = Object.keys(taskType)[0];
+
+
+        if (taskTypeName === "notImportant") {
+            changeStoreChecked(notImportantStore, taskType, taskTypeName, e.target.checked);
+
+        } else if (taskTypeName === "important") {
+            changeStoreChecked(importantStore, taskType, taskTypeName, e.target.checked);
+
+        } else if (taskTypeName === "veryImportant") {
+            changeStoreChecked(veryImportantStore, taskType, taskTypeName, e.target.checked);
+        }
+    }
+}
+
+// сохранение статуса маркировки в "./Store.js"
+
+function changeStoreChecked(store, type, name, checkedStatus) {
+
+    const storeElementIndex = store.findIndex(el => el.id == type[name]);
+    store[storeElementIndex].checked = checkedStatus;
+}
