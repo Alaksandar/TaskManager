@@ -22,3 +22,9 @@ close_form.addEventListener("click", e => closeForm(e.target));
 // Создать задачу при клике на кнопку "Добавить":
 
 form.addEventListener("submit", e => submitTask(e));
+
+
+
+// Скрыть / показать колонку с заданиями кликом на заголовок:
+
+container.addEventListener("click", hideShowTasksColumn);

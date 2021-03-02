@@ -60,22 +60,34 @@ export function submitTask(e) {
         inputText.value = "";
         options[0].selected = false;
 
-        console.log(li);
-
     } else if (options[1].selected && (inputText.value != 0)) {
 
         new ImportantTask(inputText.value).create(li);
         inputText.value = "";
         options[1].selected = false;
 
-        console.log(li);
-
     } else if (options[2].selected && (inputText.value != 0)) {
 
         new VeryImportantTask(inputText.value).create(li);
         inputText.value = "";
         options[2].selected = false;
+    }
+}
 
-        console.log(li);
+
+
+// Скрыть / показать колонку с заданиями кликом на заголовок:
+
+export function hideShowTasksColumn(e) {
+
+    if (!e.target.classList.contains("title")) {
+        return
+
+    } else {
+        for (let li of Array.from(e.target.nextElementSibling.children)) {
+
+            li.classList.toggle("clean");
+            e.target.classList.toggle("chosen");
+        }
     }
 }

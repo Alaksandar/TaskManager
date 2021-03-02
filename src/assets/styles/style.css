@@ -144,17 +144,17 @@ input[type="submit"]:hover {
 }
 
 .not-important-task-col {
-    background-color: darkseagreen;
+    /* background-color: darkseagreen; */
     color: darkgreen;
 }
 
 .important-task-col {
-    background-color: khaki;
+    /* background-color: khaki; */
     color: goldenrod;
 }
 
 .very-important-task-col {
-    background-color: lightsalmon;
+    /* background-color: lightsalmon; */
     color: darkred;
 }
 
@@ -165,6 +165,18 @@ input[type="submit"]:hover {
 
 h2 {
     text-align: center;
+    display: inline;
+    cursor: pointer;
+}
+h2:hover {
+    text-decoration: underline;
+}
+
+h2.chosen {
+    text-decoration: underline;
+}
+h2.chosen:hover {
+    text-decoration: none;
 }
 
 ul {
@@ -179,6 +191,10 @@ li {
     height: 25px;
     transition: height .3s ease-out;
     margin-right: 10px;
+}
+
+li.clean {
+    display: none;
 }
 
 /* img {
