@@ -143,20 +143,20 @@ input[type="submit"]:hover {
     justify-content: space-around;
 }
 
-/* .not-important-task-col {
+.not-important-task-col {
     background-color: darkseagreen;
     color: darkgreen;
-} */
+}
 
-/* .important-task-col {
+.important-task-col {
     background-color: khaki;
     color: goldenrod;
-} */
+}
 
-/* .very-important-task-col {
+.very-important-task-col {
     background-color: lightsalmon;
     color: darkred;
-} */
+}
 
 .list-container {
     justify-content: center;
