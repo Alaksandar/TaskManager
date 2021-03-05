@@ -52,8 +52,6 @@ export function submitTask(e) {
 
     const li = document.createElement("li");
 
-    console.log(inputText.value)
-
     if (options[0].selected && (inputText.value != 0)) {
 
         new NotImportantTask(inputText.value).create(li);
@@ -131,4 +129,49 @@ function changeStoreChecked(store, type, name, checkedStatus) {
 
     const storeElementIndex = store.findIndex(el => el.id == type[name]);
     store[storeElementIndex].checked = checkedStatus;
+}
+
+
+
+// Удалить задачу кликом по иконке-"х", если статус задачи checked:
+
+export function deleteTask(e) {
+
+    if (e.target.classList.contains("delete") &&
+        e.target.closest("li").firstElementChild.checked === true) {
+
+        let taskType = e.target.parentElement.dataset;
+        
+        let taskTypeName = Object.keys(taskType)[0];
+
+        e.target.closest("li").remove();
+
+        if (taskTypeName === "notImportant") {
+            
+            notImportantStore.splice(e.target.parentElement.dataset.notImportant, 1);
+            culculateListAtributes(notImportantStore, "data-not-important");
+
+        } else if (taskTypeName === "important") {
+            
+            importantStore.splice(e.target.parentElement.dataset.notImportant, 1);
+            culculateListAtributes(importantStore, "data-important");
+
+        } else if (taskTypeName === "veryImportant") {
+            
+            veryImportantStore.splice(e.target.parentElement.dataset.notImportant, 1);
+            culculateListAtributes(veryImportantStore, "data-very-important");
+        }
+
+    } else return;
+
+}
+
+function culculateListAtributes(store, attribute) {
+
+    const list = document.querySelectorAll(`[${attribute}]`);
+    
+    for (let i in store) {
+        list[i].setAttribute(attribute, i);
+        store[i].id = i;
+    }
 }

@@ -1,10 +1,15 @@
-import { openForm, closeForm, submitTask } from "./Actions.js";
+import { openForm, closeForm, submitTask, , hideShowTasksColumn, markTask, deleteTask } from "./Actions.js";
 
 import "./assets/styles/style.css";
+
+import delete_icon from "./assets/images/icon-delete.png";
 
 const addButton = document.querySelector("button[data-action=add]");
 const close_form = document.querySelector(".close_form");
 const form = document.querySelector("form");
+
+const deleteIcon = document.createElement("img");
+deleteIcon.src = delete_icon;
 
 
 // Раскрыть форму при клике на кнопку "Создать задачу",
@@ -33,3 +38,9 @@ container.addEventListener("click", hideShowTasksColumn);
 // Маркировка задач
 
 container.addEventListener("click", markTask);
+
+
+
+// Удалить задачу кликом по иконке-"х", если статус задачи checked:
+
+container.addEventListener("click", deleteTask);

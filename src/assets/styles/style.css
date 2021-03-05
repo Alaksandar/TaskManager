@@ -144,17 +144,14 @@ input[type="submit"]:hover {
 }
 
 .not-important-task-col {
-    /* background-color: darkseagreen; */
     color: darkgreen;
 }
 
 .important-task-col {
-    /* background-color: khaki; */
     color: goldenrod;
 }
 
 .very-important-task-col {
-    /* background-color: lightsalmon; */
     color: darkred;
 }
 
@@ -185,19 +182,23 @@ ul {
 
 li {
     display: flex;
-    align-items: center;
     list-style-type: none;
     list-style-position: inside;
-    height: 25px;
-    transition: height .3s ease-out;
     margin-right: 10px;
 }
 
-li.clean {
+.clean {
     display: none;
 }
 
-/* img {
+input[type="checkbox"] {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.delete {
     height: 15px;
     margin-left: 5px;
-} */
+    cursor: pointer;
+}
