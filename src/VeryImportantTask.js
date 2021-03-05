@@ -20,13 +20,9 @@ export class VeryImportantTask extends Task {
         li.setAttribute("data-very-important", veryImportantStore.length);
 
         const ul = document.querySelector(".very-important-task-col ul");
-
         ul.append(li);
 
         this.id = veryImportantStore.length;
-
         veryImportantStore.push(this);
-
-        console.log("veryImportantStore ", veryImportantStore);
     }
 }
