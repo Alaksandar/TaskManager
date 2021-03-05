@@ -20,14 +20,9 @@ export class NotImportantTask extends Task {
         li.setAttribute("data-not-important", notImportantStore.length);
 
         const ul = document.querySelector(".not-important-task-col ul");
-
         ul.append(li);
-        
 
         this.id = notImportantStore.length;
-
         notImportantStore.push(this);
-
-        console.log("notImportantStore ", notImportantStore);
     }
 }
