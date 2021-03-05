@@ -21,7 +21,7 @@ export class NotImportantTask extends Task {
 
         const ul = document.querySelector(".not-important-task-col ul");
         ul.append(li);
-
+        
         this.id = notImportantStore.length;
         notImportantStore.push(this);
     }
