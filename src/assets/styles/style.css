@@ -3,6 +3,7 @@ body {
     margin: 0;
     min-width: 280px;
     height: 100%;
+    box-sizing: border-box;
 }
 
 .wrapper {
@@ -13,6 +14,8 @@ body {
 .container {
     display: flex;
     min-height: 100vh;
+    max-width: 1500px;
+    margin: 0 auto;
 }
 
 
@@ -20,7 +23,11 @@ body {
 /* form container */
 
 .container__form-container {
-    padding: 10px;
+    display: flex;
+    margin: 10px;
+    justify-content: center;
+    align-items: flex-start;
+    min-width: 250px;
 }
 
 button[data-action="add"] {
@@ -29,32 +36,35 @@ button[data-action="add"] {
     cursor: pointer;
     color: white;
     border: 2px solid black;
-    padding: 10px;
+    padding: 10px 15px;
     font-size: 16px;
-    margin-top: 10px;
-    margin-left: 15px;
     opacity: 0.8;
 }
 
 form {
     display: flex;
     flex-direction: column;
-    margin: 10px 0 0 0;
+    margin: 0 auto;
     padding: 5px;
-    background-color: #d5cf8c;
+    background-color: #ebe5ad;
+    /* background-color: #b9dee9; */
+    max-width: 265px;
 }
 
 .close {
-    visibility: hidden;
+    display: none;
+    /* visibility: hidden; */
 }
 
 .open {
-    visibility: visible;
+    display: flex;
+    /* visibility: visible; */
 }
+
 
 .select {
     padding: 3px 0px;
-    margin: 3px;
+    margin: 3px auto;
     background-color: inherit;
     height: 30px;
     border: none;
@@ -69,12 +79,34 @@ select:focus {
     outline-offset: 0px;
 }
 
+
 option {
     display: inline-flex;
     border: 1px solid black;
-    margin: 2px;
+    margin: 2px 5px;
     cursor: pointer;
+    opacity: 0.8;
+    color: cornsilk;
 }
+
+option[value="not-imp"] {
+    background-color: rgb(82, 126, 82);
+}
+option[value="imp"] {
+    background-color: rgb(207, 191, 44);
+}option[value="very-imp"] {
+    background-color: rgb(224, 60, 31);;
+}
+
+option:hover {
+    opacity: 1;
+}
+
+option:focus {
+    outline: none;
+    
+}
+
 
 input[type="text"] {
     color: brown;
@@ -141,6 +173,8 @@ input[type="submit"]:hover {
     width: 100%;
     display: flex;
     justify-content: space-around;
+    /* background-color: aqua; */
+    margin: 0 auto;
 }
 
 .not-important-task-col {
@@ -157,7 +191,7 @@ input[type="submit"]:hover {
 
 .list-container {
     justify-content: center;
-    min-width: 300px;
+    margin: 10px;
 }
 
 h2 {
@@ -204,4 +238,69 @@ input[type="checkbox"] {
     height: 15px;
     margin-left: 5px;
     cursor: pointer;
+}
+
+
+/* media */
+
+@media (min-width: 1200px) {
+    .container__form-container {
+        justify-content: flex-end;
+    }
+}
+
+/* Landscape phones and portrait tablets */
+
+@media (max-width: 767px) {
+    .container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 767px) and (min-width: 481px) {
+    .container__form-container {
+        justify-content: flex-start;
+    }
+}
+
+/* Landscape phones and smaller */
+
+@media (max-width: 480px) {
+
+    .container__form-container {
+        justify-content: center;
+    }
+
+
+    .container__tasks-container{
+        flex-direction: column-reverse;
+        margin: 0px;
+        align-items: center;
+        width: 100%;
+    }
+
+    .list-container {
+        width: 100%;
+        text-align: center;
+        margin: 0;
+    }
+
+    .title {
+        text-align: center;
+        display: inline;
+    }
+
+    ul {
+        padding-inline-start: 10px;
+    }
+
+    .not-important-task-col {
+        background-color: darkseagreen;
+    }    
+    .important-task-col {
+        background-color: khaki;
+    } 
+    .very-important-task-col {
+        background-color: lightsalmon;
+    }
 }

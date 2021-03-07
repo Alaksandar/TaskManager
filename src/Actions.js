@@ -1,22 +1,22 @@
-import { NotImportantTask } from "./NotImportantTask.js";
-import { ImportantTask } from "./ImportantTask.js";
-import { VeryImportantTask } from "./VeryImportantTask.js";
+import { NotImportantTask } from "./notImportantTask.js";
+import { ImportantTask } from "./importantTask.js";
+import { VeryImportantTask } from "./veryImportantTask.js";
 
-import { notImportantStore, importantStore, veryImportantStore } from "./Store.js";
+import { notImportantStore, importantStore, veryImportantStore } from "./store.js";
 
 import "./assets/styles/style.css";
 
 
+
 // Раскрыть форму при клике на кнопку "Создать задачу",
 // cкрыть кнопку "Создать задачу":
-
 
 export function openForm(addButton) {
 
     const addList = document.querySelector("#add-list");
     addList.classList.remove("close");
     addList.classList.add("open");
-
+    
     addButton.hidden = true;
 }
 
@@ -25,13 +25,11 @@ export function openForm(addButton) {
 // Свернуть форму при клике на кнопку "x",
 // показать кнопку "Создать задачу":
 
-
 export function closeForm(close_form) {
-
-    const addList = document.querySelector("#add-list");
+    const addList = close_form.parentElement.parentElement;
     addList.classList.remove("open");
     addList.classList.add("close");
-
+  
     const addButton = document.querySelector("button[data-action=add]");
     addButton.hidden = false;
 }
@@ -123,6 +121,7 @@ export function markTask(e) {
     }
 }
 
+
 // сохранение статуса маркировки в "./Store.js"
 
 function changeStoreChecked(store, type, name, checkedStatus) {
@@ -153,12 +152,12 @@ export function deleteTask(e) {
 
         } else if (taskTypeName === "important") {
             
-            importantStore.splice(e.target.parentElement.dataset.notImportant, 1);
+            importantStore.splice(e.target.parentElement.dataset.important, 1);
             culculateListAtributes(importantStore, "data-important");
 
         } else if (taskTypeName === "veryImportant") {
             
-            veryImportantStore.splice(e.target.parentElement.dataset.notImportant, 1);
+            veryImportantStore.splice(e.target.parentElement.dataset.veryImportant, 1);
             culculateListAtributes(veryImportantStore, "data-very-important");
         }
 
@@ -166,12 +165,15 @@ export function deleteTask(e) {
 
 }
 
+
+// Переопределить data-attribute и id всех задач при удалении одной из них: 
+
 function culculateListAtributes(store, attribute) {
 
     const list = document.querySelectorAll(`[${attribute}]`);
     
     for (let i in store) {
-        list[i].setAttribute(attribute, i);
         store[i].id = i;
+        list[i].setAttribute(attribute, i);
     }
 }

@@ -1,6 +1,6 @@
 import "./assets/styles/style.css";
 
-
+import delete_icon from "./assets/images/icon-delete.png";
 
 // Создать строку задачи:
 
@@ -19,7 +19,12 @@ export class Task {
         const label = document.createElement('label');
         label.textContent = this.name;
 
+        const deleteIcon = document.createElement("img");
+        deleteIcon.src = delete_icon;
+        deleteIcon.classList.add("delete");
+
         li.append(checkbox);
         li.append(label);
+        li.append(deleteIcon);
     }
 }
