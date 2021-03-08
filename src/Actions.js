@@ -22,24 +22,25 @@ export function openForm(addButton) {
 
 
 
-// Свернуть форму при клике на кнопку "x",
-// показать кнопку "Создать задачу":
+// Свернуть форму при клике на кнопку "x", 
+// показать кнопку "Создать задачу",
+
 
 export function closeForm(close_form) {
     const addList = close_form.parentElement.parentElement;
     addList.classList.remove("open");
     addList.classList.add("close");
-  
+
     const addButton = document.querySelector("button[data-action=add]");
     addButton.hidden = false;
 }
 
 
 
-// Создать задачу при клике на кнопку "Добавить" на основе конструктора из "./Task.js",
+// Создать задачу при клике на кнопку "Добавить" на основе конструктора из "./task.js",
 // поместить задачу в соответствующей колонке, если:
-// 1) поле ввода не пустое,
-// 2) выбран уровень срочности.
+// 1) поле ввода не пустое, 2) выбран уровень срочности;
+// блокировка ввода дублирующихся задач:
 
 export function submitTask(e) {
 
@@ -49,6 +50,13 @@ export function submitTask(e) {
     const options = document.querySelectorAll("option");
 
     const li = document.createElement("li");
+
+    const {value} = inputText;
+
+    if (value === "" || findDublicateTask(value)) {
+        return
+    }
+
 
     if (options[0].selected && (inputText.value != 0)) {
 
@@ -175,5 +183,22 @@ function culculateListAtributes(store, attribute) {
     for (let i in store) {
         store[i].id = i;
         list[i].setAttribute(attribute, i);
+    }
+}
+
+
+
+// Блокировка ввода дублирующихся задач:
+
+function findDublicateTask(name) {
+
+    const notImportantDublecateIndex = notImportantStore.findIndex(el => el.name === name);
+    const importantDublecateIndex = importantStore.findIndex(el => el.name === name);
+    const veryImportantDublecateIndex = veryImportantStore.findIndex(el => el.name === name);
+
+    if (notImportantDublecateIndex === -1 && importantDublecateIndex === -1 && veryImportantDublecateIndex === -1) {
+        return false;
+    } else {
+        return true;
     }
 }
