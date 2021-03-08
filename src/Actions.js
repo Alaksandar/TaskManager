@@ -22,14 +22,21 @@ export function openForm(addButton) {
 
 
 
-// Свернуть форму при клике на кнопку "x", 
-// показать кнопку "Создать задачу",
-
+// Свернуть форму при клике на кнопку "x", показать кнопку "Создать задачу",
+// очистить поле ввода и отменить селектор:
 
 export function closeForm(close_form) {
     const addList = close_form.parentElement.parentElement;
     addList.classList.remove("open");
     addList.classList.add("close");
+
+    const inputText = document.querySelector('input[type="text"]');
+    inputText.value = "";
+
+    const options = document.querySelectorAll(".option");
+    for (let option of options) {
+        option.selected = false;
+    }
 
     const addButton = document.querySelector("button[data-action=add]");
     addButton.hidden = false;
