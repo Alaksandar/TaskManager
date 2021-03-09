@@ -6,7 +6,7 @@ import { importantStore } from "./store.js";
 
 // Создать срочную задачу,
 // поместить задачу в соответствующую колонку,
-// сохранить данные задачи в массиве в "./Store.js"
+// сохранить данные задачи в массиве в "./store.js"
 
 export class ImportantTask extends Task {
 
