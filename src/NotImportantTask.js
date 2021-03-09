@@ -1,6 +1,6 @@
-import { Task } from "./Task.js";
+import { Task } from "./task.js";
 
-import { notImportantStore } from "./Store.js";
+import { notImportantStore } from "./store.js";
 
 
 

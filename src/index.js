@@ -1,4 +1,4 @@
-import { openForm, closeForm, submitTask, hideShowTasksColumn, markTask, deleteTask } from "./Actions.js";
+import { openForm, closeForm, submitTask, hideShowTasksColumn, markTask, deleteTask } from "./actions.js";
 
 import "./assets/styles/style.css";
 
@@ -7,6 +7,7 @@ import delete_icon from "./assets/images/icon-delete.png";
 const addButton = document.querySelector("button[data-action=add]");
 const close_form = document.querySelector(".close_form");
 const form = document.querySelector("form");
+const container = document.querySelector(".container__tasks-container");
 
 const deleteIcon = document.createElement("img");
 deleteIcon.src = delete_icon;
