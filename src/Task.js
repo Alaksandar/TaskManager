@@ -15,6 +15,7 @@ export class Task {
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
+        checkbox.checked = this.checked;
 
         const label = document.createElement('label');
         label.textContent = this.name;
