@@ -8,11 +8,15 @@ import { notImportantStore, importantStore, veryImportantStore } from "./store.j
 import "./assets/styles/style.css";
 
 
+const addButton = document.querySelector("button[data-action=add]");
+const close_form = document.querySelector(".close_form");
 
 // Раскрыть форму при клике на кнопку "Создать задачу",
 // cкрыть кнопку "Создать задачу":
 
 export function openForm(addButton) {
+
+    console.log("openForm")
 
     const addList = document.querySelector("#add-list");
     addList.classList.remove("close");
@@ -26,21 +30,29 @@ export function openForm(addButton) {
 // Свернуть форму при клике на кнопку "x", показать кнопку "Создать задачу",
 // очистить поле ввода и отменить селектор:
 
-export function closeForm(close_form) {
-    const addList = close_form.parentElement.parentElement;
-    addList.classList.remove("open");
-    addList.classList.add("close");
+export function closeForm(e) {
 
-    const inputText = document.querySelector('input[type="text"]');
-    inputText.value = "";
+    if (!e.target.classList.contains("close_form")) {
 
-    const options = document.querySelectorAll(".option");
-    for (let option of options) {
-        option.selected = false;
+        return;
+
+    } else {
+
+        const addList = e.target.parentElement.parentElement;
+        addList.classList.remove("open");
+        addList.classList.add("close");
+
+        const inputText = document.querySelector('input[type="text"]');
+        inputText.value = "";
+
+        const options = document.querySelectorAll(".option");
+        for (let option of options) {
+            option.selected = false;
+        }
+
+        const addButton = document.querySelector("button[data-action=add]");
+        addButton.hidden = false;
     }
-
-    const addButton = document.querySelector("button[data-action=add]");
-    addButton.hidden = false;
 }
 
 
@@ -157,6 +169,49 @@ function changeStoreChecked(store, type, name, checkedStatus) {
 
     const storeElementIndex = store.findIndex(el => el.id == type[name]);
     store[storeElementIndex].checked = checkedStatus;
+}
+
+
+
+// Редактировать задачу кликом по иконке "pancil", если статус задачи checked:
+export function editTask(e) {
+
+    if (e.target.classList.contains("edit") &&
+        e.target.closest("li").firstElementChild.checked === true) {
+
+        console.log("edit");
+
+        openForm(addButton);
+
+
+        let taskType = e.target.parentElement.dataset;
+
+        let taskTypeName = Object.keys(taskType)[0];
+
+
+        // if (taskTypeName === "notImportant") {
+
+        //     notImportantStore.splice(e.target.parentElement.dataset.notImportant, 1);
+
+        //     changeLocalStorage("notImportantStore", notImportantStore);
+        //     culculateListAtributes(notImportantStore, "data-not-important");
+
+        // } else if (taskTypeName === "important") {
+
+        //     importantStore.splice(e.target.parentElement.dataset.important, 1);
+
+        //     culculateListAtributes(importantStore, "data-important");
+        //     changeLocalStorage("importantStore", importantStore);
+
+
+        // } else if (taskTypeName === "veryImportant") {
+
+        //     veryImportantStore.splice(e.target.parentElement.dataset.veryImportant, 1);
+
+        //     culculateListAtributes(veryImportantStore, "data-very-important");
+        //     changeLocalStorage("veryImportantStore", veryImportantStore);
+        // }
+    } else return;
 }
 
 

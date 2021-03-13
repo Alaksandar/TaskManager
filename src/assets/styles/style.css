@@ -234,9 +234,10 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-.delete {
-    height: 15px;
+.delete, .edit {
+    height: 12px;
     margin-left: 5px;
+    margin-top: 2px;
     cursor: pointer;
 }
 
