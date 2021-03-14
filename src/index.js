@@ -28,7 +28,7 @@ addButton.addEventListener("click", e => openForm(e.target));
 
 // Свернуть форму при клике на кнопку "x",
 // показать кнопку "Создать задачу":
-document.addEventListener("click", closeForm);
+close_form.addEventListener("click", e => closeForm(e.target));
 
 
 // Создать задачу при клике на кнопку "Добавить":
@@ -43,7 +43,7 @@ container.addEventListener("click", hideShowTasksColumn);
 container.addEventListener("click", markTask);
 
 
-// Редактировать задачу кликом по иконке "pancil", если статус задачи checked:
+// Редактировать задачу кликом по иконке "pancil":
 document.addEventListener("click", editTask);
 
 

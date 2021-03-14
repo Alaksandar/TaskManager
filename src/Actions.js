@@ -11,7 +11,9 @@ import "./assets/styles/style.css";
 const addButton = document.querySelector("button[data-action=add]");
 const close_form = document.querySelector(".close_form");
 
-// Раскрыть форму при клике на кнопку "Создать задачу",
+
+
+// Раскрыть форму при клике на кнопку "Создать задачу" (и иконке "pancil"),
 // cкрыть кнопку "Создать задачу":
 
 export function openForm(addButton) {
@@ -27,22 +29,19 @@ export function openForm(addButton) {
 
 
 
-// Свернуть форму при клике на кнопку "x", показать кнопку "Создать задачу",
-// очистить поле ввода и отменить селектор:
+// Свернуть форму при клике на кнопку "x" (и кнопку "Добавить"),
+// очистить содержимое и пользовательские атрибуты поля ввода,
+// отменить селектор, показать кнопку "Создать задачу":
 
-export function closeForm(e) {
+export function closeForm(close_form) {
 
-    if (!e.target.classList.contains("close_form")) {
-
-        return;
-
-    } else {
-
-        const addList = e.target.parentElement.parentElement;
+        const addList = close_form.parentElement.parentElement;
         addList.classList.remove("open");
         addList.classList.add("close");
 
         const inputText = document.querySelector('input[type="text"]');
+        inputText.removeAttribute("tasktypename");
+        inputText.removeAttribute("editLiAttribute");
         inputText.value = "";
 
         const options = document.querySelectorAll(".option");
@@ -52,23 +51,31 @@ export function closeForm(e) {
 
         const addButton = document.querySelector("button[data-action=add]");
         addButton.hidden = false;
-    }
 }
 
 
 
-// Создать задачу при клике на кнопку "Добавить" на основе конструктора из "./task.js",
+// Создать задачу при клике на кнопку "Добавить":
+// a) при редактировании задачи (поле ввода содержит пользовательские атрибуты),
+// b) на основе конструктора из "./task.js";
 // поместить задачу в соответствующей колонке, если:
-// 1) поле ввода не пустое, 2) выбран уровень срочности;
+// 1) поле ввода не пустое, 2) выбран уровень срочности, 3) задача не дублируется;
+// свернуть форму;
 // findDublicateTask() - блокировка ввода дублирующихся задач;
 // changeLocalStorage() - сохранение изменений в LocalStorage;
 
 export function submitTask(e) {
-
     e.preventDefault();
 
     const inputText = document.querySelector('input[type="text"]');
     const options = document.querySelectorAll("option");
+
+
+    if (inputText.getAttribute("tasktypename")) {
+
+        editTaskToSubmit(inputText);
+    }
+
 
     const li = document.createElement("li");
 
@@ -82,27 +89,119 @@ export function submitTask(e) {
     if (options[0].selected && (inputText.value != null)) {
 
         new NotImportantTask(inputText.value).create(li);
-        inputText.value = "";
-        options[0].selected = false;
 
         changeLocalStorage("notImportantStore", notImportantStore);
 
     } else if (options[1].selected && (inputText.value != null)) {
 
         new ImportantTask(inputText.value).create(li);
-        inputText.value = "";
-        options[1].selected = false;
 
         changeLocalStorage("importantStore", importantStore);
 
     } else if (options[2].selected && (inputText.value != null)) {
 
         new VeryImportantTask(inputText.value).create(li);
-        inputText.value = "";
-        options[2].selected = false;
 
         changeLocalStorage("veryImportantStore", veryImportantStore);
     }
+
+    closeForm(close_form);
+}
+
+
+
+// Сохранение отредактированной задачи при клике на кнопку "Добавить":
+
+function editTaskToSubmit(inputText) {
+
+    const taskTypeName = inputText.getAttribute("tasktypename");
+    const editLiAttribute = inputText.getAttribute("editLiAttribute");
+    console.log("taskTypeName ", taskTypeName);
+    console.log("editLiAttribute ", editLiAttribute);
+
+    const options = document.querySelectorAll("option");
+    const list = document.querySelectorAll("li");
+
+    for (let li of list) {
+
+        if ( (inputText.getAttribute("tasktypename") === "notImportant") &&
+             (li.getAttribute("data-not-important") === editLiAttribute) ) {
+
+            const label = li.firstElementChild.nextElementSibling;
+            label.innerText = inputText.value;
+            
+            if (options[0].selected && (inputText.value != null)) {
+
+                notImportantStore[editLiAttribute].name = label.innerText;
+                notImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
+            
+            } else if (options[1].selected && (inputText.value != null)) {
+
+                li.remove();
+                new ImportantTask(inputText.value).create(li);
+            
+            } else if (options[2].selected && (inputText.value != null)) {
+
+                li.remove();
+                new VeryImportantTask(inputText.value).create(li);
+            
+            } else return; 
+
+
+            changeLocalStorage("notImportantStore", notImportantStore);
+
+        } else if ( (inputText.getAttribute("tasktypename") === "important") &&
+                    (li.getAttribute("data-important") === editLiAttribute) ) {
+
+            const label = li.firstElementChild.nextElementSibling;
+            label.innerText = inputText.value;
+            
+            importantStore[editLiAttribute].name = label.innerText;
+            importantStore[editLiAttribute].checked = li.firstElementChild.checked;
+
+            changeLocalStorage("importantStore", importantStore);
+
+        } else if ( (inputText.getAttribute("tasktypename") === "veryImportant") &&
+                    (li.getAttribute("data-very-important") === editLiAttribute) ) {
+
+            const label = li.firstElementChild.nextElementSibling;
+            label.innerText = inputText.value;
+
+            veryImportantStore[editLiAttribute].name = label.innerText;
+            veryImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
+
+            changeLocalStorage("veryImportantStore", veryImportantStore);
+        }
+    }
+
+    closeForm(close_form);
+}
+
+
+
+// Редактировать задачу кликом по иконке "pancil", раскрыть форму,
+// задать пользовательские атрибуты и содержимое полю ввода,
+// переход к function submitTask()
+
+export function editTask(e) {
+
+    if (e.target.classList.contains("edit")) {
+
+            console.log("edit");
+
+        openForm(addButton);
+
+        let taskType = e.target.parentElement.dataset;
+        let taskTypeName = Object.keys(taskType)[0];
+        let editLiAttribute = Object.values(taskType)[0];
+
+        const inputText = document.querySelector('input[type="text"]');
+        inputText.value = e.target.previousElementSibling.innerText;
+
+        inputText.setAttribute("taskTypeName", taskTypeName);
+        inputText.setAttribute("editLiAttribute", editLiAttribute);
+
+    } else return;
 }
 
 
@@ -173,58 +272,15 @@ function changeStoreChecked(store, type, name, checkedStatus) {
 
 
 
-// Редактировать задачу кликом по иконке "pancil", если статус задачи checked:
-export function editTask(e) {
-
-    if (e.target.classList.contains("edit") &&
-        e.target.closest("li").firstElementChild.checked === true) {
-
-        console.log("edit");
-
-        openForm(addButton);
-
-
-        let taskType = e.target.parentElement.dataset;
-
-        let taskTypeName = Object.keys(taskType)[0];
-
-
-        // if (taskTypeName === "notImportant") {
-
-        //     notImportantStore.splice(e.target.parentElement.dataset.notImportant, 1);
-
-        //     changeLocalStorage("notImportantStore", notImportantStore);
-        //     culculateListAtributes(notImportantStore, "data-not-important");
-
-        // } else if (taskTypeName === "important") {
-
-        //     importantStore.splice(e.target.parentElement.dataset.important, 1);
-
-        //     culculateListAtributes(importantStore, "data-important");
-        //     changeLocalStorage("importantStore", importantStore);
-
-
-        // } else if (taskTypeName === "veryImportant") {
-
-        //     veryImportantStore.splice(e.target.parentElement.dataset.veryImportant, 1);
-
-        //     culculateListAtributes(veryImportantStore, "data-very-important");
-        //     changeLocalStorage("veryImportantStore", veryImportantStore);
-        // }
-    } else return;
-}
-
-
-
 // Удалить задачу кликом по иконке-"х", если статус задачи checked:
 
 export function deleteTask(e) {
 
     if (e.target.classList.contains("delete") &&
+        // || e.target.classList.contains("edit") )
         e.target.closest("li").firstElementChild.checked === true) {
 
         let taskType = e.target.parentElement.dataset;
-
         let taskTypeName = Object.keys(taskType)[0];
 
         e.target.closest("li").remove();
@@ -242,7 +298,6 @@ export function deleteTask(e) {
 
             culculateListAtributes(importantStore, "data-important");
             changeLocalStorage("importantStore", importantStore);
-
 
         } else if (taskTypeName === "veryImportant") {
 
@@ -265,6 +320,8 @@ function culculateListAtributes(store, attribute) {
     for (let i in store) {
         store[i].id = i;
         list[i].setAttribute(attribute, i);
+
+        console.log("culculateListAtributes ", list[i].getAttribute(attribute));
     }
 }
 
@@ -290,6 +347,9 @@ function findDublicateTask(name) {
 // Сохранение изменений в LocalStorage при создании, маркировке и удалении задач;
 function changeLocalStorage(name, store) {
     localStorage.setItem(name, JSON.stringify(store));
+
+    console.log("changeLocalStorage", name);
+    console.log("store", store);
 }
 
 
