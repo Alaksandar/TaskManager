@@ -49,6 +49,7 @@ form {
     background-color: #ebe5ad;
     /* background-color: #b9dee9; */
     max-width: 265px;
+    position: relative;
 }
 
 .close {
@@ -125,6 +126,27 @@ input[type="text"]:hover {
     border-bottom: 2px solid brown;
     opacity: 1;
 }
+
+
+/* .task_warning {
+    color: brown;
+    font-size: 14px;
+    background-color: #ebe5ad;
+    width: 240px;
+    height: 24px;
+    position: absolute;
+    top: 50px;
+    left: 5px;
+    z-index: 3;
+}
+
+.close_warning {
+    visibility: hidden;
+}
+.open_warning {
+    visibility: visible;
+} */
+
 
 .form-buttons {
     display: flex;

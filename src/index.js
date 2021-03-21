@@ -49,3 +49,7 @@ document.addEventListener("click", editTask);
 
 // Удалить задачу кликом по иконке-"х", если статус задачи checked:
 container.addEventListener("click", deleteTask);
+
+
+// // Скрыть предупреждение о дублирующемся задании:
+// form.addEventListener("click", e => closeWarning(e.target));

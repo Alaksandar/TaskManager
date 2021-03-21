@@ -10,6 +10,7 @@ import "./assets/styles/style.css";
 
 const addButton = document.querySelector("button[data-action=add]");
 const close_form = document.querySelector(".close_form");
+// const inputText = document.querySelector('input[type="text"]');
 
 
 
@@ -18,7 +19,7 @@ const close_form = document.querySelector(".close_form");
 
 export function openForm(addButton) {
 
-    console.log("openForm")
+    // console.log("openForm")
 
     const addList = document.querySelector("#add-list");
     addList.classList.remove("close");
@@ -35,22 +36,62 @@ export function openForm(addButton) {
 
 export function closeForm(close_form) {
 
-        const addList = close_form.parentElement.parentElement;
-        addList.classList.remove("open");
-        addList.classList.add("close");
+    // console.log("editTask");
+
+    const addList = close_form.parentElement.parentElement;
+    addList.classList.remove("open");
+    addList.classList.add("close");
+
+    const inputText = document.querySelector('input[type="text"]');
+    inputText.removeAttribute("tasktypename");
+    inputText.removeAttribute("editLiAttribute");
+    inputText.value = "";
+
+    const options = document.querySelectorAll(".option");
+    for (let option of options) {
+        option.selected = false;
+    }
+
+    const addButton = document.querySelector("button[data-action=add]");
+    addButton.hidden = false;
+}
+
+
+
+// export function closeWarning(inputText) {
+
+//     const task_warning = inputText.nextElementSibling;
+//     task_warning.classList.add("close_warning");
+//     if (task_warning.classList.contains("open_warning")){
+//         task_warning.classList.remove("open_warning");
+//     }
+// }
+
+
+
+// Редактировать задачу кликом по иконке "pancil", раскрыть форму,
+// задать пользовательские атрибуты и содержимое полю ввода,
+// переход к function submitTask()
+
+export function editTask(e) {
+
+    if (e.target.classList.contains("edit")) {
+
+        // console.log("editTask");
+
+        openForm(addButton);
+
+        let taskType = e.target.parentElement.dataset;
+        let taskTypeName = Object.keys(taskType)[0];
+        let editLiAttribute = Object.values(taskType)[0];
 
         const inputText = document.querySelector('input[type="text"]');
-        inputText.removeAttribute("tasktypename");
-        inputText.removeAttribute("editLiAttribute");
-        inputText.value = "";
+        inputText.value = e.target.previousElementSibling.innerText;
 
-        const options = document.querySelectorAll(".option");
-        for (let option of options) {
-            option.selected = false;
-        }
+        inputText.setAttribute("taskTypeName", taskTypeName);
+        inputText.setAttribute("editLiAttribute", editLiAttribute);
 
-        const addButton = document.querySelector("button[data-action=add]");
-        addButton.hidden = false;
+    } else return;
 }
 
 
@@ -67,45 +108,61 @@ export function closeForm(close_form) {
 export function submitTask(e) {
     e.preventDefault();
 
+    // console.log("submitTask");
+
     const inputText = document.querySelector('input[type="text"]');
     const options = document.querySelectorAll("option");
+
+    const { value } = inputText;
 
 
     if (inputText.getAttribute("tasktypename")) {
 
+        console.log("0000000");
         editTaskToSubmit(inputText);
+
+    } else {
+
+
+        if (value === "" || findDublicateTask(value)) {
+            console.log(2222222, value, findDublicateTask(value));
+            return
+        }
+
+
+        const li = document.createElement("li");
+
+
+        if (options[0].selected && (inputText.value != "")) {
+
+            console.log('if (options[0].selected && (inputText.value != ""))');
+
+            new NotImportantTask(inputText.value).create(li);
+
+            changeLocalStorage("notImportantStore", notImportantStore);
+
+        } else if (options[1].selected && (inputText.value != "")) {
+
+            console.log('if (options[1].selected && (inputText.value != ""))');
+
+            new ImportantTask(inputText.value).create(li);
+
+            changeLocalStorage("importantStore", importantStore);
+
+        } else if (options[2].selected && (inputText.value != "")) {
+
+            console.log('if (options[2].selected && (inputText.value != ""))');
+
+            new VeryImportantTask(inputText.value).create(li);
+
+            changeLocalStorage("veryImportantStore", veryImportantStore);
+        }
+
+        closeForm(close_form);
+
+        console.log("444444444");
+
     }
-
-
-    const li = document.createElement("li");
-
-    const { value } = inputText;
-
-    if (value === "" || findDublicateTask(value)) {
-        return
-    }
-
-
-    if (options[0].selected && (inputText.value != null)) {
-
-        new NotImportantTask(inputText.value).create(li);
-
-        changeLocalStorage("notImportantStore", notImportantStore);
-
-    } else if (options[1].selected && (inputText.value != null)) {
-
-        new ImportantTask(inputText.value).create(li);
-
-        changeLocalStorage("importantStore", importantStore);
-
-    } else if (options[2].selected && (inputText.value != null)) {
-
-        new VeryImportantTask(inputText.value).create(li);
-
-        changeLocalStorage("veryImportantStore", veryImportantStore);
-    }
-
-    closeForm(close_form);
 }
 
 
@@ -114,95 +171,272 @@ export function submitTask(e) {
 
 function editTaskToSubmit(inputText) {
 
+    // console.log("editTaskToSubmit");
+
     const taskTypeName = inputText.getAttribute("tasktypename");
     const editLiAttribute = inputText.getAttribute("editLiAttribute");
-    console.log("taskTypeName ", taskTypeName);
-    console.log("editLiAttribute ", editLiAttribute);
 
     const options = document.querySelectorAll("option");
     const list = document.querySelectorAll("li");
 
     for (let li of list) {
 
-        if ( (inputText.getAttribute("tasktypename") === "notImportant") &&
-             (li.getAttribute("data-not-important") === editLiAttribute) ) {
-
-            const label = li.firstElementChild.nextElementSibling;
-            label.innerText = inputText.value;
-            
-            if (options[0].selected && (inputText.value != null)) {
-
-                notImportantStore[editLiAttribute].name = label.innerText;
-                notImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
-            
-            } else if (options[1].selected && (inputText.value != null)) {
-
-                li.remove();
-                new ImportantTask(inputText.value).create(li);
-            
-            } else if (options[2].selected && (inputText.value != null)) {
-
-                li.remove();
-                new VeryImportantTask(inputText.value).create(li);
-            
-            } else return; 
+        if ((Object.keys(li.dataset)[0] === taskTypeName) &&
+            (Object.values(li.dataset)[0] === editLiAttribute)) {
 
 
-            changeLocalStorage("notImportantStore", notImportantStore);
+            if ((options[0].selected) || (options[1].selected) || (options[2].selected)) {
 
-        } else if ( (inputText.getAttribute("tasktypename") === "important") &&
-                    (li.getAttribute("data-important") === editLiAttribute) ) {
+                console.log("Selected!");
 
-            const label = li.firstElementChild.nextElementSibling;
-            label.innerText = inputText.value;
-            
-            importantStore[editLiAttribute].name = label.innerText;
-            importantStore[editLiAttribute].checked = li.firstElementChild.checked;
+                const label = li.firstElementChild.nextElementSibling;
 
-            changeLocalStorage("importantStore", importantStore);
+                if ((label.innerText === inputText.value) || !(findDublicateTask(inputText.value))) {
 
-        } else if ( (inputText.getAttribute("tasktypename") === "veryImportant") &&
-                    (li.getAttribute("data-very-important") === editLiAttribute) ) {
+                    label.innerText = inputText.value;
+                    const new_li = document.createElement("li");
 
-            const label = li.firstElementChild.nextElementSibling;
-            label.innerText = inputText.value;
+                    if ((inputText.getAttribute("tasktypename") === "notImportant") &&
+                        (li.getAttribute("data-not-important") === editLiAttribute)) {
 
-            veryImportantStore[editLiAttribute].name = label.innerText;
-            veryImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
 
-            changeLocalStorage("veryImportantStore", veryImportantStore);
+                        if (options[0].selected) {
+
+                            console.log("notImportant options[0].selected");
+
+                            notImportantStore[editLiAttribute].name = label.innerText;
+                            notImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
+
+
+                        } else if (options[1].selected) {
+
+                            console.log("notImportant options[1].selected");
+
+                            notImportantStore.splice(li.dataset.notImportant, 1);
+                            li.remove();
+
+                            new ImportantTask(inputText.value).create(new_li);
+
+
+                        } else if (options[2].selected) {
+
+                            console.log("notImportant options[2].selected");
+
+                            notImportantStore.splice(li.dataset.notImportant, 1);
+                            li.remove();
+
+                            new VeryImportantTask(inputText.value).create(new_li);
+
+                        } else return;
+
+
+                    } else if ((inputText.getAttribute("tasktypename") === "important") &&
+                        (li.getAttribute("data-important") === editLiAttribute)) {
+
+
+                        if (options[0].selected) {
+
+                            console.log("important options[0].selected");
+
+                            li.remove();
+                            importantStore.splice(li.dataset.important, 1);
+
+                            new NotImportantTask(inputText.value).create(new_li);
+
+                        } else if (options[1].selected) {
+
+                            console.log("important options[1].selected");
+
+                            importantStore[editLiAttribute].name = label.innerText;
+                            importantStore[editLiAttribute].checked = li.firstElementChild.checked;
+
+                        } else if (options[2].selected) {
+
+                            console.log("important options[2].selected");
+                            importantStore.splice(li.dataset.important, 1);
+
+                            li.remove();
+                            new VeryImportantTask(inputText.value).create(new_li);
+
+                        } else return;
+
+
+                    } else if ((inputText.getAttribute("tasktypename") === "veryImportant") &&
+                        (li.getAttribute("data-very-important") === editLiAttribute)) {
+
+
+                        if (options[0].selected) {
+
+                            console.log("veryImportant options[0].selected");
+
+                            li.remove();
+                            veryImportantStore.splice(li.dataset.veryImportant, 1);
+
+                            new NotImportantTask(inputText.value).create(new_li);
+
+                        } else if (options[1].selected) {
+
+                            console.log("veryImportant options[1].selected");
+
+                            li.remove();
+                            veryImportantStore.splice(li.dataset.veryImportant, 1);
+
+
+                            new ImportantTask(inputText.value).create(new_li);
+
+                        } else if (options[2].selected) {
+
+                            console.log("veryImportant options[2].selected");
+
+                            veryImportantStore[editLiAttribute].name = label.innerText;
+                            veryImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
+
+                        } else return;
+                    }
+
+                    culculateListAtributes(notImportantStore, "data-not-important");
+                    culculateListAtributes(importantStore, "data-important");
+                    culculateListAtributes(veryImportantStore, "data-very-important");
+
+                    changeLocalStorage("notImportantStore", notImportantStore);
+                    changeLocalStorage("importantStore", importantStore);
+                    changeLocalStorage("veryImportantStore", veryImportantStore);
+
+                    closeForm(close_form);
+                
+                } else {
+
+                    console.log("Task is already exists");
+                }
+
+            } else {
+
+                console.log("Choose select!");
+            }
         }
-    }
-
-    closeForm(close_form);
+    }    
 }
 
 
 
-// Редактировать задачу кликом по иконке "pancil", раскрыть форму,
-// задать пользовательские атрибуты и содержимое полю ввода,
-// переход к function submitTask()
+//         let taskTexst = inputText.value;
 
-export function editTask(e) {
+//         inputText.value = "";
+//         console.log("taskTexst ", taskTexst);
 
-    if (e.target.classList.contains("edit")) {
 
-            console.log("edit");
+//         if (taskTypeName === "notImportant") {
 
-        openForm(addButton);
 
-        let taskType = e.target.parentElement.dataset;
-        let taskTypeName = Object.keys(taskType)[0];
-        let editLiAttribute = Object.values(taskType)[0];
 
-        const inputText = document.querySelector('input[type="text"]');
-        inputText.value = e.target.previousElementSibling.innerText;
+//             if (options[0].selected) {
 
-        inputText.setAttribute("taskTypeName", taskTypeName);
-        inputText.setAttribute("editLiAttribute", editLiAttribute);
+//                 console.log("Selected notImportant !");
 
-    } else return;
-}
+//                 notImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
+//                 changeLocalStorage("notImportantStore", notImportantStore);
+
+//             } else if (options[1].selected) {
+
+//                 console.log("Selected important !");
+
+//                 let checked = li.firstElementChild.checked;
+//                 notImportantStore.splice(li.dataset.notImportant, 1); 
+//                 li.remove();
+//                 changeLocalStorage("notImportantStore", notImportantStore);
+
+//                 new ImportantTask(taskTexst, checked).create(li);
+//                 changeLocalStorage("importantStore", importantStore);
+
+
+//             } else if (options[2].selected  && !(findDublicateTask(taskTexst))) {
+
+//                 console.log("Selected veryImportant !");
+
+//                 let checked = li.firstElementChild.checked;
+//                 notImportantStore.splice(li.dataset.notImportant, 1); 
+//                 li.remove();
+//                 changeLocalStorage("notImportantStore", notImportantStore);
+
+//                 new VeryImportantTask(taskTexst, checked).create(li);
+//                 changeLocalStorage("veryImportantStore", veryImportantStore);
+//             }
+
+// } else {
+
+//     console.log("Selected not notImportant !");
+
+//     submitBtn.setAttribute("taskTexst", taskTexst);
+//     notImportantStore.splice(li.dataset.notImportant, 1);
+
+//         console.log("notImportantStore ", notImportantStore);
+//         console.log("submitBtn ", submitBtn);
+
+//     li.remove();
+//     changeLocalStorage("notImportantStore", notImportantStore);
+
+
+//     return;
+// }
+
+//     } else if (taskTypeName === "important") {
+
+//         inputText.removeAttribute("tasktypename");
+//         inputText.removeAttribute("editLiAttribute");
+
+
+//         if (options[1].selected) {
+
+//             console.log("Selected important !");
+
+//             importantStore[editLiAttribute].name = taskTexst;
+//             importantStore[editLiAttribute].checked = li.firstElementChild.checked;
+//             changeLocalStorage("importantStore", importantStore);
+
+//         } else {
+
+//             console.log("Selected not important !");
+//             li.remove();
+//             changeLocalStorage("importantStore", importantStore);
+//             return;
+//         }
+
+//     } else if (taskTypeName === "veryImportant") {
+
+//         inputText.removeAttribute("tasktypename");
+//         inputText.removeAttribute("editLiAttribute");
+
+
+//         if (options[2].selected) {
+
+//             console.log("Selected veryImportant !");
+
+//             veryImportantStore[editLiAttribute].name = taskTexst;
+//             veryImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
+//             changeLocalStorage("veryImportantStore", veryImportantStore);
+
+//         } else {
+
+//             console.log("Selected not veryImportant !");
+//             li.remove();
+//             changeLocalStorage("veryImportantStore", veryImportantStore);
+//             return;
+//         }
+//     }
+
+//     // changeLocalStorage("notImportantStore", notImportantStore);
+//     // changeLocalStorage("importantStore", importantStore);
+//     // changeLocalStorage("veryImportantStore", veryImportantStore);
+
+//     closeForm(close_form);
+
+// } else {
+
+//     console.log("Choose select!");
+// }
+// } else return;
+
+// changeLocalStorage("notImportantStore", notImportantStore);
 
 
 
@@ -277,7 +511,6 @@ function changeStoreChecked(store, type, name, checkedStatus) {
 export function deleteTask(e) {
 
     if (e.target.classList.contains("delete") &&
-        // || e.target.classList.contains("edit") )
         e.target.closest("li").firstElementChild.checked === true) {
 
         let taskType = e.target.parentElement.dataset;
@@ -307,6 +540,8 @@ export function deleteTask(e) {
             changeLocalStorage("veryImportantStore", veryImportantStore);
         }
     } else return;
+
+    closeForm(close_form);
 }
 
 
@@ -320,8 +555,6 @@ function culculateListAtributes(store, attribute) {
     for (let i in store) {
         store[i].id = i;
         list[i].setAttribute(attribute, i);
-
-        console.log("culculateListAtributes ", list[i].getAttribute(attribute));
     }
 }
 
@@ -346,9 +579,9 @@ function findDublicateTask(name) {
 
 // Сохранение изменений в LocalStorage при создании, маркировке и удалении задач;
 function changeLocalStorage(name, store) {
+
     localStorage.setItem(name, JSON.stringify(store));
 
-    console.log("changeLocalStorage", name);
     console.log("store", store);
 }
 
