@@ -587,56 +587,43 @@ function changeLocalStorage(name, store) {
 
 
 
+
+// function reloadStorages(storeName, store, attribute) {
+
+//     const list = document.querySelectorAll(`[${attribute}]`);
+
+//     console.log(list);
+
+//     store.push(...JSON.parse(localStorage.getItem(storeName)));
+    
+//     for (let i in store) {
+            
+//         list[i].setAttribute(attribute, i);
+//         new Task(store[i].name, store[i].checked).create(li);
+//     }
+// }
+
 // Извлечение данных из localStorage при загрузке страницы:
 
 export function reload() {
 
+        reloadStorages("notImportantStore", notImportantStore, "data-not-important", ".not-important-task-col ul");
+        reloadStorages("importantStore", importantStore, "data-important", ".important-task-col ul");
+        reloadStorages("veryImportantStore", veryImportantStore, "data-very-important", ".very-important-task-col ul");
+}
 
-    if (localStorage.getItem("notImportantStore")) {
+function reloadStorages(storeName, store, attribute, list) {
 
-        notImportantStore.push(...JSON.parse(localStorage.getItem("notImportantStore")));
+        store.push(...JSON.parse(localStorage.getItem(storeName)));
 
-        for (let i in notImportantStore) {
-
-            const li = document.createElement("li");
-            li.setAttribute("data-not-important", i);
-
-            new Task(notImportantStore[i].name, notImportantStore[i].checked).create(li);
-
-            const ul = document.querySelector(".not-important-task-col ul");
-            ul.append(li);
-        }
-    }
-
-    if (localStorage.getItem("importantStore")) {
-
-        importantStore.push(...JSON.parse(localStorage.getItem("importantStore")));
-
-        for (let i in importantStore) {
+        for (let i in store) {
 
             const li = document.createElement("li");
-            li.setAttribute("data-important", i);
+            li.setAttribute(attribute, i);
 
-            new Task(importantStore[i].name, importantStore[i].checked).create(li);
+            new Task(store[i].name, store[i].checked).create(li);
 
-            const ul = document.querySelector(".important-task-col ul");
+            const ul = document.querySelector(list);
             ul.append(li);
         }
-    }
-
-    if (localStorage.getItem("veryImportantStore")) {
-
-        veryImportantStore.push(...JSON.parse(localStorage.getItem("veryImportantStore")));
-
-        for (let i in veryImportantStore) {
-
-            const li = document.createElement("li");
-            li.setAttribute("data-very-important", i);
-
-            new Task(veryImportantStore[i].name, veryImportantStore[i].checked).create(li);
-
-            const ul = document.querySelector(".very-important-task-col ul");
-            ul.append(li);
-        }
-    }
 }
