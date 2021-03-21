@@ -10,16 +10,14 @@ import "./assets/styles/style.css";
 
 const addButton = document.querySelector("button[data-action=add]");
 const close_form = document.querySelector(".close_form");
-// const inputText = document.querySelector('input[type="text"]');
-
+const inputText = document.querySelector('input[type="text"]');
+const select = document.querySelectorAll(".select");
 
 
 // Раскрыть форму при клике на кнопку "Создать задачу" (и иконке "pancil"),
 // cкрыть кнопку "Создать задачу":
 
 export function openForm(addButton) {
-
-    // console.log("openForm")
 
     const addList = document.querySelector("#add-list");
     addList.classList.remove("close");
@@ -36,13 +34,10 @@ export function openForm(addButton) {
 
 export function closeForm(close_form) {
 
-    // console.log("editTask");
-
     const addList = close_form.parentElement.parentElement;
     addList.classList.remove("open");
     addList.classList.add("close");
 
-    const inputText = document.querySelector('input[type="text"]');
     inputText.removeAttribute("tasktypename");
     inputText.removeAttribute("editLiAttribute");
     inputText.value = "";
@@ -54,18 +49,24 @@ export function closeForm(close_form) {
 
     const addButton = document.querySelector("button[data-action=add]");
     addButton.hidden = false;
+
+    closeWarningMassage(inputText, select);
 }
 
 
 
-// export function closeWarning(inputText) {
+export function closeWarningMassage(inputText, select) {
 
-//     const task_warning = inputText.nextElementSibling;
-//     task_warning.classList.add("close_warning");
-//     if (task_warning.classList.contains("open_warning")){
-//         task_warning.classList.remove("open_warning");
-//     }
-// }
+    const warnings = document.querySelectorAll(".warning");
+    
+    for (let warning of warnings) {
+
+        // window.setTimeout(function () {       
+            warning.classList.add("close_warning");
+            warning.classList.remove("open_warning");
+        // }, 3500);
+    }
+}
 
 
 
@@ -75,9 +76,7 @@ export function closeForm(close_form) {
 
 export function editTask(e) {
 
-    if (e.target.classList.contains("edit")) {
-
-        // console.log("editTask");
+    if (e.target.classList.contains("edit") && e.target.parentElement.firstElementChild.checked ===false) {
 
         openForm(addButton);
 
@@ -85,11 +84,11 @@ export function editTask(e) {
         let taskTypeName = Object.keys(taskType)[0];
         let editLiAttribute = Object.values(taskType)[0];
 
-        const inputText = document.querySelector('input[type="text"]');
         inputText.value = e.target.previousElementSibling.innerText;
-
         inputText.setAttribute("taskTypeName", taskTypeName);
         inputText.setAttribute("editLiAttribute", editLiAttribute);
+
+        closeWarningMassage(inputText, select);
 
     } else return;
 }
@@ -108,60 +107,54 @@ export function editTask(e) {
 export function submitTask(e) {
     e.preventDefault();
 
-    // console.log("submitTask");
-
-    const inputText = document.querySelector('input[type="text"]');
     const options = document.querySelectorAll("option");
-
+    const li = document.createElement("li");
     const { value } = inputText;
-
 
     if (inputText.getAttribute("tasktypename")) {
 
-        console.log("0000000");
         editTaskToSubmit(inputText);
+
+
+    } else if (value === "" || findDublicateTask(value)) {
+
+            console.log("Task is already exists");
+
+            const task_warning = document.querySelector(".task_warning");
+            task_warning.classList.remove("close_warning");
+            task_warning.classList.add("open_warning");
+
 
     } else {
 
-
-        if (value === "" || findDublicateTask(value)) {
-            console.log(2222222, value, findDublicateTask(value));
-            return
-        }
-
-
-        const li = document.createElement("li");
-
-
-        if (options[0].selected && (inputText.value != "")) {
-
-            console.log('if (options[0].selected && (inputText.value != ""))');
+        if (options[0].selected) {
 
             new NotImportantTask(inputText.value).create(li);
-
             changeLocalStorage("notImportantStore", notImportantStore);
 
-        } else if (options[1].selected && (inputText.value != "")) {
-
-            console.log('if (options[1].selected && (inputText.value != ""))');
+            closeForm(close_form);
+            
+        } else if (options[1].selected) {
 
             new ImportantTask(inputText.value).create(li);
-
             changeLocalStorage("importantStore", importantStore);
 
-        } else if (options[2].selected && (inputText.value != "")) {
+            closeForm(close_form);
 
-            console.log('if (options[2].selected && (inputText.value != ""))');
+        } else if (options[2].selected) {
 
             new VeryImportantTask(inputText.value).create(li);
-
             changeLocalStorage("veryImportantStore", veryImportantStore);
+
+            closeForm(close_form);
+
+        } else {
+            console.log("Укажите срочность задачи");
+
+            const select_warning = document.querySelector(".select_warning");
+            select_warning.classList.remove("close_warning");
+            select_warning.classList.add("open_warning");
         }
-
-        closeForm(close_form);
-
-        console.log("444444444");
-
     }
 }
 
@@ -187,8 +180,6 @@ function editTaskToSubmit(inputText) {
 
             if ((options[0].selected) || (options[1].selected) || (options[2].selected)) {
 
-                console.log("Selected!");
-
                 const label = li.firstElementChild.nextElementSibling;
 
                 if ((label.innerText === inputText.value) || !(findDublicateTask(inputText.value))) {
@@ -196,97 +187,69 @@ function editTaskToSubmit(inputText) {
                     label.innerText = inputText.value;
                     const new_li = document.createElement("li");
 
-                    if ((inputText.getAttribute("tasktypename") === "notImportant") &&
-                        (li.getAttribute("data-not-important") === editLiAttribute)) {
+            
 
+                    if (taskTypeName === "notImportant") {
 
                         if (options[0].selected) {
-
-                            console.log("notImportant options[0].selected");
 
                             notImportantStore[editLiAttribute].name = label.innerText;
                             notImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
 
-
                         } else if (options[1].selected) {
-
-                            console.log("notImportant options[1].selected");
 
                             notImportantStore.splice(li.dataset.notImportant, 1);
                             li.remove();
-
                             new ImportantTask(inputText.value).create(new_li);
-
 
                         } else if (options[2].selected) {
 
-                            console.log("notImportant options[2].selected");
-
                             notImportantStore.splice(li.dataset.notImportant, 1);
                             li.remove();
-
                             new VeryImportantTask(inputText.value).create(new_li);
 
                         } else return;
 
 
-                    } else if ((inputText.getAttribute("tasktypename") === "important") &&
-                        (li.getAttribute("data-important") === editLiAttribute)) {
 
+                    } else if (taskTypeName === "important") {
 
                         if (options[0].selected) {
 
-                            console.log("important options[0].selected");
-
                             li.remove();
                             importantStore.splice(li.dataset.important, 1);
-
                             new NotImportantTask(inputText.value).create(new_li);
 
                         } else if (options[1].selected) {
-
-                            console.log("important options[1].selected");
 
                             importantStore[editLiAttribute].name = label.innerText;
                             importantStore[editLiAttribute].checked = li.firstElementChild.checked;
 
                         } else if (options[2].selected) {
 
-                            console.log("important options[2].selected");
                             importantStore.splice(li.dataset.important, 1);
-
                             li.remove();
                             new VeryImportantTask(inputText.value).create(new_li);
 
                         } else return;
 
 
-                    } else if ((inputText.getAttribute("tasktypename") === "veryImportant") &&
-                        (li.getAttribute("data-very-important") === editLiAttribute)) {
 
+                    } else if (taskTypeName === "veryImportant") {
 
                         if (options[0].selected) {
 
-                            console.log("veryImportant options[0].selected");
-
                             li.remove();
                             veryImportantStore.splice(li.dataset.veryImportant, 1);
-
                             new NotImportantTask(inputText.value).create(new_li);
 
                         } else if (options[1].selected) {
 
-                            console.log("veryImportant options[1].selected");
-
                             li.remove();
                             veryImportantStore.splice(li.dataset.veryImportant, 1);
-
-
                             new ImportantTask(inputText.value).create(new_li);
 
                         } else if (options[2].selected) {
-
-                            console.log("veryImportant options[2].selected");
 
                             veryImportantStore[editLiAttribute].name = label.innerText;
                             veryImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
@@ -307,136 +270,23 @@ function editTaskToSubmit(inputText) {
                 } else {
 
                     console.log("Task is already exists");
+
+                    const task_warning = document.querySelector(".task_warning");
+                    task_warning.classList.remove("close_warning");
+                    task_warning.classList.add("open_warning");
                 }
 
             } else {
 
                 console.log("Choose select!");
+
+                const select_warning = document.querySelector(".select_warning");
+                select_warning.classList.remove("close_warning");
+                select_warning.classList.add("open_warning");
             }
         }
     }    
 }
-
-
-
-//         let taskTexst = inputText.value;
-
-//         inputText.value = "";
-//         console.log("taskTexst ", taskTexst);
-
-
-//         if (taskTypeName === "notImportant") {
-
-
-
-//             if (options[0].selected) {
-
-//                 console.log("Selected notImportant !");
-
-//                 notImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
-//                 changeLocalStorage("notImportantStore", notImportantStore);
-
-//             } else if (options[1].selected) {
-
-//                 console.log("Selected important !");
-
-//                 let checked = li.firstElementChild.checked;
-//                 notImportantStore.splice(li.dataset.notImportant, 1); 
-//                 li.remove();
-//                 changeLocalStorage("notImportantStore", notImportantStore);
-
-//                 new ImportantTask(taskTexst, checked).create(li);
-//                 changeLocalStorage("importantStore", importantStore);
-
-
-//             } else if (options[2].selected  && !(findDublicateTask(taskTexst))) {
-
-//                 console.log("Selected veryImportant !");
-
-//                 let checked = li.firstElementChild.checked;
-//                 notImportantStore.splice(li.dataset.notImportant, 1); 
-//                 li.remove();
-//                 changeLocalStorage("notImportantStore", notImportantStore);
-
-//                 new VeryImportantTask(taskTexst, checked).create(li);
-//                 changeLocalStorage("veryImportantStore", veryImportantStore);
-//             }
-
-// } else {
-
-//     console.log("Selected not notImportant !");
-
-//     submitBtn.setAttribute("taskTexst", taskTexst);
-//     notImportantStore.splice(li.dataset.notImportant, 1);
-
-//         console.log("notImportantStore ", notImportantStore);
-//         console.log("submitBtn ", submitBtn);
-
-//     li.remove();
-//     changeLocalStorage("notImportantStore", notImportantStore);
-
-
-//     return;
-// }
-
-//     } else if (taskTypeName === "important") {
-
-//         inputText.removeAttribute("tasktypename");
-//         inputText.removeAttribute("editLiAttribute");
-
-
-//         if (options[1].selected) {
-
-//             console.log("Selected important !");
-
-//             importantStore[editLiAttribute].name = taskTexst;
-//             importantStore[editLiAttribute].checked = li.firstElementChild.checked;
-//             changeLocalStorage("importantStore", importantStore);
-
-//         } else {
-
-//             console.log("Selected not important !");
-//             li.remove();
-//             changeLocalStorage("importantStore", importantStore);
-//             return;
-//         }
-
-//     } else if (taskTypeName === "veryImportant") {
-
-//         inputText.removeAttribute("tasktypename");
-//         inputText.removeAttribute("editLiAttribute");
-
-
-//         if (options[2].selected) {
-
-//             console.log("Selected veryImportant !");
-
-//             veryImportantStore[editLiAttribute].name = taskTexst;
-//             veryImportantStore[editLiAttribute].checked = li.firstElementChild.checked;
-//             changeLocalStorage("veryImportantStore", veryImportantStore);
-
-//         } else {
-
-//             console.log("Selected not veryImportant !");
-//             li.remove();
-//             changeLocalStorage("veryImportantStore", veryImportantStore);
-//             return;
-//         }
-//     }
-
-//     // changeLocalStorage("notImportantStore", notImportantStore);
-//     // changeLocalStorage("importantStore", importantStore);
-//     // changeLocalStorage("veryImportantStore", veryImportantStore);
-
-//     closeForm(close_form);
-
-// } else {
-
-//     console.log("Choose select!");
-// }
-// } else return;
-
-// changeLocalStorage("notImportantStore", notImportantStore);
 
 
 
@@ -586,22 +436,6 @@ function changeLocalStorage(name, store) {
 }
 
 
-
-
-// function reloadStorages(storeName, store, attribute) {
-
-//     const list = document.querySelectorAll(`[${attribute}]`);
-
-//     console.log(list);
-
-//     store.push(...JSON.parse(localStorage.getItem(storeName)));
-    
-//     for (let i in store) {
-            
-//         list[i].setAttribute(attribute, i);
-//         new Task(store[i].name, store[i].checked).create(li);
-//     }
-// }
 
 // Извлечение данных из localStorage при загрузке страницы:
 

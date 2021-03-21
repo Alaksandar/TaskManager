@@ -1,4 +1,4 @@
-import { reload, openForm, closeForm, submitTask, hideShowTasksColumn, markTask, deleteTask, editTask } from "./actions.js";
+import { reload, openForm, closeForm, submitTask, hideShowTasksColumn, markTask, deleteTask, editTask, closeWarningMassage } from "./actions.js";
 
 import "./assets/styles/style.css";
 
@@ -52,4 +52,4 @@ container.addEventListener("click", deleteTask);
 
 
 // // Скрыть предупреждение о дублирующемся задании:
-// form.addEventListener("click", e => closeWarning(e.target));
+form.addEventListener("click", e => closeWarningMassage(e.target));

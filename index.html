@@ -17,7 +17,7 @@
                 <button class="button" data-action="add">Создать задачу</button>
                 <form id="add-list" class="close" method="post" action="#">
                     <input type="text" name="toList" placeholder="Добавить задачу" value="" required autocomplete="off">
-                    <!-- <span class="task_warning" class="close_warning">Задача с таким названием уже существует!</span> -->
+                    <span class="warning task_warning close_warning">Такая задача уже существует!</span>
                     <select class="select" name="select" size="3" multiple>
 
                         <option class="option" value="not-imp">Несрочно</option>
@@ -28,6 +28,7 @@
                     <div class="form-buttons">
                         <input type="submit" value="Добавить">
                         <span class="close_form">x</span>
+                        <span class="warning select_warning close_warning">Укажите срочность задачи!</span>
                     </div>
                 </form>
             </div>

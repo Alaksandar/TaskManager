@@ -27,7 +27,6 @@ body {
     margin: 10px;
     justify-content: center;
     align-items: flex-start;
-    min-width: 250px;
 }
 
 button[data-action="add"] {
@@ -128,24 +127,37 @@ input[type="text"]:hover {
 }
 
 
-/* .task_warning {
+.warning {
     color: brown;
-    font-size: 14px;
-    background-color: #ebe5ad;
-    width: 240px;
-    height: 24px;
+    font-size: 16px;
+    font-family: sans-serif;
+    background-color: #fff;
+    border: 1px solid brown;
+    border-radius: 5px;
     position: absolute;
-    top: 50px;
-    left: 5px;
-    z-index: 3;
+    text-align: center;
+    padding: 5px;
+    transition: display 2.5s ease;
 }
 
 .close_warning {
-    visibility: hidden;
+    display: none;
 }
+
 .open_warning {
-    visibility: visible;
-} */
+    display: block;
+    z-index: 3;
+}
+
+.task_warning {
+    top: 36px;
+    left: 5px;
+}
+
+.select_warning {
+    bottom: 17px;
+    left: -6px;
+}
 
 
 .form-buttons {
