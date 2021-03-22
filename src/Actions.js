@@ -12,8 +12,10 @@ import "./assets/styles/style.css";
 
 const addButton = document.querySelector("button[data-action=add]");
 const close_form = document.querySelector(".close_form");
-const inputText = document.querySelector('input[type="text"]');
 const select = document.querySelectorAll(".select");
+
+const inputText = document.querySelector('input[type="text"]');
+
 
 
 // Раскрыть форму при клике на кнопку "Создать задачу" (и иконке "pancil"),
@@ -57,6 +59,8 @@ export function closeForm(close_form) {
 
 
 
+// Скрыть всплывающие сообщения:
+
 export function closeWarningMassage(inputText, select) {
 
     const warnings = document.querySelectorAll(".warning");
@@ -78,12 +82,14 @@ export function closeWarningMassage(inputText, select) {
 
 export function editTask(e) {
 
-    if (e.target.classList.contains("edit") && e.target.parentElement.firstElementChild.checked ===false) {
+    if (e.target.classList.contains("edit") && e.target.parentElement.firstElementChild.checked === false) {
 
         openForm(addButton);
 
         let taskType = e.target.parentElement.dataset;
+
         let taskTypeName = Object.keys(taskType)[0];
+
         let editLiAttribute = Object.values(taskType)[0];
 
         inputText.value = e.target.previousElementSibling.innerText;
@@ -109,49 +115,52 @@ export function editTask(e) {
 export function submitTask(e) {
     e.preventDefault();
 
+    const valueTrim = String(inputText.value).trim();
     const options = document.querySelectorAll("option");
     const li = document.createElement("li");
-    const { value } = inputText;
+    
 
     if (inputText.getAttribute("tasktypename")) {
 
         editTaskToSubmit(inputText);
 
+    } else if (valueTrim === "") {
 
-    } else if (value === "" || findDublicateTask(value)) {
+        const emptyStr_warning = document.querySelector(".emptyStr_warning");
+        emptyStr_warning.classList.remove("close_warning");
+        emptyStr_warning.classList.add("open_warning");
 
-            console.log("Task is already exists");
 
-            const task_warning = document.querySelector(".task_warning");
-            task_warning.classList.remove("close_warning");
-            task_warning.classList.add("open_warning");
+    } else if (findDublicateTask(valueTrim)) {
 
+        const task_warning = document.querySelector(".task_warning");
+        task_warning.classList.remove("close_warning");
+        task_warning.classList.add("open_warning");
 
     } else {
 
         if (options[0].selected) {
 
-            new NotImportantTask(inputText.value).create(li);
+            new NotImportantTask(valueTrim).create(li);
             changeLocalStorage("notImportantStore", notImportantStore);
 
             closeForm(close_form);
             
         } else if (options[1].selected) {
 
-            new ImportantTask(inputText.value).create(li);
+            new ImportantTask(valueTrim).create(li);
             changeLocalStorage("importantStore", importantStore);
 
             closeForm(close_form);
 
         } else if (options[2].selected) {
 
-            new VeryImportantTask(inputText.value).create(li);
+            new VeryImportantTask(valueTrim).create(li);
             changeLocalStorage("veryImportantStore", veryImportantStore);
 
             closeForm(close_form);
 
         } else {
-            console.log("Укажите срочность задачи");
 
             const select_warning = document.querySelector(".select_warning");
             select_warning.classList.remove("close_warning");
@@ -165,8 +174,6 @@ export function submitTask(e) {
 // Сохранение отредактированной задачи при клике на кнопку "Добавить":
 
 function editTaskToSubmit(inputText) {
-
-    // console.log("editTaskToSubmit");
 
     const taskTypeName = inputText.getAttribute("tasktypename");
     const editLiAttribute = inputText.getAttribute("editLiAttribute");
@@ -271,16 +278,12 @@ function editTaskToSubmit(inputText) {
                 
                 } else {
 
-                    console.log("Task is already exists");
-
                     const task_warning = document.querySelector(".task_warning");
                     task_warning.classList.remove("close_warning");
                     task_warning.classList.add("open_warning");
                 }
 
             } else {
-
-                console.log("Choose select!");
 
                 const select_warning = document.querySelector(".select_warning");
                 select_warning.classList.remove("close_warning");
@@ -330,7 +333,6 @@ export function markTask(e) {
 
         const deleteIcon = e.target.nextElementSibling.nextElementSibling.nextElementSibling;
         deleteIcon.classList.toggle("close");
-        // e.target.checked ? deleteIcon.classList.remove("close") : deleteIcon.classList.add("close");
         
         let taskType = e.target.nextElementSibling.parentElement.dataset;
         let taskTypeName = Object.keys(taskType)[0];

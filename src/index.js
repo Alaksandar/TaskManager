@@ -51,5 +51,5 @@ document.addEventListener("click", editTask);
 container.addEventListener("click", deleteTask);
 
 
-// // Скрыть предупреждение о дублирующемся задании:
+// Скрыть всплывающие сообщения::
 form.addEventListener("click", e => closeWarningMassage(e.target));
