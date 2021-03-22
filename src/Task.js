@@ -25,9 +25,14 @@ export class Task {
         editIcon.src = edit_icon;
         editIcon.classList.add("edit");
 
+        if (this.checked) {
+            editIcon.classList.add("close");
+        }
+
         const deleteIcon = document.createElement("img");
         deleteIcon.src = delete_icon;
         deleteIcon.classList.add("delete");
+
         if (this.checked === false) {
             deleteIcon.classList.add("close");
         }

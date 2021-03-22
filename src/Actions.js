@@ -325,6 +325,9 @@ export function markTask(e) {
 
         e.target.setAttribute("checked", e.target.checked);
 
+        const editIcon = e.target.nextElementSibling.nextElementSibling;
+        editIcon.classList.toggle("close");
+
         const deleteIcon = e.target.nextElementSibling.nextElementSibling.nextElementSibling;
         deleteIcon.classList.toggle("close");
         // e.target.checked ? deleteIcon.classList.remove("close") : deleteIcon.classList.add("close");
