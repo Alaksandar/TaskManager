@@ -7,6 +7,8 @@ import { notImportantStore, importantStore, veryImportantStore } from "./store.j
 
 import "./assets/styles/style.css";
 
+// import edit_icon from "./assets/images/edit-icon.png";
+// import delete_icon from "./assets/images/icon-delete.png";
 
 const addButton = document.querySelector("button[data-action=add]");
 const close_form = document.querySelector(".close_form");
@@ -323,6 +325,10 @@ export function markTask(e) {
 
         e.target.setAttribute("checked", e.target.checked);
 
+        const deleteIcon = e.target.nextElementSibling.nextElementSibling.nextElementSibling;
+        deleteIcon.classList.toggle("close");
+        // e.target.checked ? deleteIcon.classList.remove("close") : deleteIcon.classList.add("close");
+        
         let taskType = e.target.nextElementSibling.parentElement.dataset;
         let taskTypeName = Object.keys(taskType)[0];
 

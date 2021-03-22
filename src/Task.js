@@ -28,6 +28,9 @@ export class Task {
         const deleteIcon = document.createElement("img");
         deleteIcon.src = delete_icon;
         deleteIcon.classList.add("delete");
+        if (this.checked === false) {
+            deleteIcon.classList.add("close");
+        }
 
         li.append(checkbox);
         li.append(label);
