@@ -64,12 +64,12 @@ export function closeForm(close_form) {
 export function closeWarningMassage(inputText, select) {
 
     const warnings = document.querySelectorAll(".warning");
-    
+
     for (let warning of warnings) {
 
         // window.setTimeout(function () {       
-            warning.classList.add("close_warning");
-            warning.classList.remove("open_warning");
+        warning.classList.add("close_warning");
+        warning.classList.remove("open_warning");
         // }, 3500);
     }
 }
@@ -118,7 +118,7 @@ export function submitTask(e) {
     const valueTrim = String(inputText.value).trim();
     const options = document.querySelectorAll("option");
     const li = document.createElement("li");
-    
+
 
     if (inputText.getAttribute("tasktypename")) {
 
@@ -145,7 +145,7 @@ export function submitTask(e) {
             changeLocalStorage("notImportantStore", notImportantStore);
 
             closeForm(close_form);
-            
+
         } else if (options[1].selected) {
 
             new ImportantTask(valueTrim).create(li);
@@ -196,7 +196,7 @@ function editTaskToSubmit(inputText) {
                     label.innerText = inputText.value;
                     const new_li = document.createElement("li");
 
-            
+
 
                     if (taskTypeName === "notImportant") {
 
@@ -275,7 +275,7 @@ function editTaskToSubmit(inputText) {
                     changeLocalStorage("veryImportantStore", veryImportantStore);
 
                     closeForm(close_form);
-                
+
                 } else {
 
                     const task_warning = document.querySelector(".task_warning");
@@ -290,7 +290,7 @@ function editTaskToSubmit(inputText) {
                 select_warning.classList.add("open_warning");
             }
         }
-    }    
+    }
 }
 
 
@@ -333,7 +333,7 @@ export function markTask(e) {
 
         const deleteIcon = e.target.nextElementSibling.nextElementSibling.nextElementSibling;
         deleteIcon.classList.toggle("close");
-        
+
         let taskType = e.target.nextElementSibling.parentElement.dataset;
         let taskTypeName = Object.keys(taskType)[0];
 
@@ -452,23 +452,30 @@ function changeLocalStorage(name, store) {
 
 export function reload() {
 
-        reloadStorages("notImportantStore", notImportantStore, "data-not-important", ".not-important-task-col ul");
-        reloadStorages("importantStore", importantStore, "data-important", ".important-task-col ul");
-        reloadStorages("veryImportantStore", veryImportantStore, "data-very-important", ".very-important-task-col ul");
+    reloadStorages("notImportantStore", notImportantStore, "data-not-important", ".not-important-task-col ul");
+    reloadStorages("importantStore", importantStore, "data-important", ".important-task-col ul");
+    reloadStorages("veryImportantStore", veryImportantStore, "data-very-important", ".very-important-task-col ul");
 }
 
-function reloadStorages(storeName, store, attribute, list) {
+function reloadStorages(name, store, attribute, list) {
 
-        store.push(...JSON.parse(localStorage.getItem(storeName)));
+    let keys = Object.keys(localStorage);
+    for(let key of keys) {
 
-        for (let i in store) {
+        if (key === name) {
 
-            const li = document.createElement("li");
-            li.setAttribute(attribute, i);
+            store.push(...JSON.parse(localStorage.getItem(key)));
 
-            new Task(store[i].name, store[i].checked).create(li);
-
-            const ul = document.querySelector(list);
-            ul.append(li);
-        }
+            for (let i in store) {
+    
+                const li = document.createElement("li");
+                li.setAttribute(attribute, i);
+    
+                new Task(store[i].name, store[i].checked).create(li);
+    
+                const ul = document.querySelector(list);
+                ul.append(li);
+            }
+        } 
+    }
 }
