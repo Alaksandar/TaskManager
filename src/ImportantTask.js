@@ -13,7 +13,7 @@ export class ImportantTask extends Task {
     constructor(name, checked) {
         super(name, checked);
     }
-
+    
     create(li) {
         super.create(li);
 

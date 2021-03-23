@@ -14,19 +14,22 @@
 
 
             <div class="container__form-container">
-                <button data-action="add">Создать задачу</button>
+                <button class="button" data-action="add">Создать задачу</button>
                 <form id="add-list" class="close" method="post" action="#">
                     <input type="text" name="toList" placeholder="Добавить задачу" value="" required autocomplete="off">
+                    <span class="warning task_warning close_warning">Такая задача уже существует!</span>
+                    <span class="warning emptyStr_warning close_warning">Заполните поле!</span>
+                    
                     <select class="select" name="select" size="3" multiple>
-
                         <option class="option" value="not-imp">Несрочно</option>
                         <option class="option" value="imp">Срочно</option>
                         <option class="option" value="very-imp">Очень срочно</option>
-
                     </select>
+
                     <div class="form-buttons">
                         <input type="submit" value="Добавить">
                         <span class="close_form">x</span>
+                        <span class="warning select_warning close_warning">Укажите срочность задачи!</span>
                     </div>
                 </form>
             </div>

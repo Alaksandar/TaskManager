@@ -27,7 +27,6 @@ body {
     margin: 10px;
     justify-content: center;
     align-items: flex-start;
-    min-width: 250px;
 }
 
 button[data-action="add"] {
@@ -49,6 +48,7 @@ form {
     background-color: #ebe5ad;
     /* background-color: #b9dee9; */
     max-width: 265px;
+    position: relative;
 }
 
 .close {
@@ -125,6 +125,45 @@ input[type="text"]:hover {
     border-bottom: 2px solid brown;
     opacity: 1;
 }
+
+
+.warning {
+    color: brown;
+    font-size: 16px;
+    font-family: sans-serif;
+    background-color: #fff;
+    border: 1px solid brown;
+    border-radius: 5px;
+    position: absolute;
+    text-align: center;
+    padding: 5px;
+    transition: display 2.5s ease;
+}
+
+.close_warning {
+    display: none;
+}
+
+.open_warning {
+    display: block;
+    z-index: 3;
+}
+
+.task_warning {
+    top: 36px;
+    left: 5px;
+}
+
+.emptyStr_warning {
+    top: 40px;
+    left: 30px;
+}
+
+.select_warning {
+    bottom: 17px;
+    left: -6px;
+}
+
 
 .form-buttons {
     display: flex;
@@ -234,9 +273,10 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-.delete {
-    height: 15px;
-    margin-left: 5px;
+.delete, .edit {
+    height: 12px;
+    margin-left: 10px;
+    margin-top: 2px;
     cursor: pointer;
 }
 
@@ -281,7 +321,7 @@ input[type="checkbox"] {
 
     .list-container {
         width: 100%;
-        text-align: center;
+        /* text-align: center; */
         margin: 0;
     }
 
